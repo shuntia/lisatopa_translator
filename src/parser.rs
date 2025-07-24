@@ -7,7 +7,7 @@ use nom::{
         take_till, take_while,
     },
     character::{char, one_of},
-    combinator::verify,
+    combinator::{recognize, verify},
     multi::{many0, many0_count},
     sequence::delimited,
 };
@@ -55,10 +55,10 @@ fn interpret<'a>(target: &'a str) -> IResult<&'a str, Line<'a>> {
 }
 
 fn parse_str<'a>(target: &'a str) -> IResult<&'a str, &'a str> {
-    alt((
+    recognize(alt((
         delimited(char('\"'), take_till(|c| c == '\"'), char('\"')),
         delimited(char('\''), take_till(|c| c == '\''), char('\'')),
-    ))
+    )))
     .parse(target)
 }
 
@@ -70,7 +70,14 @@ fn parse_keychars<'a>(target: &'a str) -> IResult<&'a str, &'a str> {
 }
 
 fn parse_word<'a>(target: &'a str) -> IResult<&'a str, &'a str> {
-    take_till1(|el: char| !el.is_alphanumeric()).parse(target)
+    let (mut res, mut content) = take_till1(|el: char| !el.is_alphanumeric()).parse(target)?;
+    if res.chars().next().is_some_and(|s| s == '!')
+        && content.chars().last().is_some_and(|s| s == 'e')
+    {
+        let (a, b) = target.split_at(content.len() + 1);
+        (res, content) = (b, a);
+    }
+    Ok((res, content))
 }
 
 #[derive(Debug)]
