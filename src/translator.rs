@@ -6,7 +6,7 @@ pub fn translate_lines<'a>(lines: Vec<Line<'a>>) -> String {
     let mut accumulator = String::new();
     let mut line_iter = lines.iter().peekable();
     let mut temp = String::new();
-    let mut no_sc = false;
+    let mut no_sc;
     while let Some(line) = line_iter.next() {
         no_sc = false;
         accumulator.push_str(&" ".repeat(line.whitespaces as usize));
@@ -38,6 +38,7 @@ pub fn translate_lines<'a>(lines: Vec<Line<'a>>) -> String {
                 "vas" => "in",
                 "kalaki" => "pub",
                 "sati" => "fn",
+                "manaka" => "main",
                 x if ";,[{}01234567890.".contains(x) => {
                     no_sc = true;
                     x
