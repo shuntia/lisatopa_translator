@@ -38,7 +38,7 @@ pub fn translate_lines<'a>(lines: Vec<Line<'a>>) -> String {
                 "vas" => "in",
                 "kalaki" => "pub",
                 "sati" => "fn",
-                x if ";,[{}".contains(x) => {
+                x if ";,[{}01234567890.".contains(x) => {
                     no_sc = true;
                     x
                 }
@@ -63,7 +63,9 @@ pub fn translate_lines<'a>(lines: Vec<Line<'a>>) -> String {
                     unknown
                 }
             });
-            accumulator.push(' ');
+            if !no_sc {
+                accumulator.push(' ');
+            }
         }
         if !no_sc {
             accumulator.push(';');
