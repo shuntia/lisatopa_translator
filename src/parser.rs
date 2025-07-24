@@ -64,7 +64,7 @@ fn parse_str<'a>(target: &'a str) -> IResult<&'a str, &'a str> {
 
 fn parse_keychars<'a>(target: &'a str) -> IResult<&'a str, &'a str> {
     verify(take(1usize), move |s: &str| {
-        "(){}[]!+-*/&^%;<>=".contains(s)
+        "(){}[]!+-*/&^%;<>=.:".contains(s)
     })
     .parse(target)
 }
